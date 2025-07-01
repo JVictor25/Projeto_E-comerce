@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout - E-Commerce</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/components/css/components.css">
+</head>
+<body>
+  <div id="header"></div>
+  <main class="container">
+    <h1>Finalizar Compra</h1>
+    <form id="checkout-form">
+      <label>Nome Completo:<br><input type="text" required></label><br><br>
+      <label>Endereço:<br><input type="text" required></label><br><br>
+      <label>Cartão de Crédito:<br><input type="text" required></label><br><br>
+      <button type="submit">Finalizar</button>
+    </form>
+  </main>
+  <div id="footer"></div>
+  <div id="modal"></div>
+  <script src="/components/js/components.js"></script>
+  <script>
+    includeComponent('#header', '/components/header.html');
+    includeComponent('#footer', '/components/footer.html');
+    includeComponent('#modal', '/components/modal.html');
+    document.getElementById('checkout-form').onsubmit = function(e) {
+      e.preventDefault();
+      showModal('Compra finalizada com sucesso!');
+    };
+  </script>
+  <script src="/js/main.js"></script>
+</body>
+</html> 

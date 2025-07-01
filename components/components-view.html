@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Catálogo de Componentes</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/components/css/components.css">
+  <style>
+    body { background: #f3f4f6; }
+    .demo-section { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #0001; margin-bottom: 2rem; padding: 2rem; }
+    .demo-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem; }
+  </style>
+</head>
+<body class="p-4">
+  <h1 class="display-4 mb-5">Catálogo de Componentes</h1>
+
+  <div class="demo-section">
+    <div class="demo-title">Header</div>
+    <div id="header-demo"></div>
+  </div>
+
+  <div class="demo-section">
+    <div class="demo-title">Footer</div>
+    <div id="footer-demo"></div>
+  </div>
+
+  <div class="demo-section">
+    <div class="demo-title">Product Card</div>
+    <div id="product-card-demo" class="d-flex gap-4"></div>
+  </div>
+
+  <div class="demo-section">
+    <div class="demo-title">Cart Item</div>
+    <div id="cart-item-demo" class="d-flex flex-column gap-4"></div>
+  </div>
+
+  <div class="demo-section">
+    <div class="demo-title d-flex align-items-center gap-4">Modal
+      <button onclick="showModal('Exemplo de conteúdo do modal!')" class="ms-4 px-4 py-2 btn btn-primary">Abrir Modal</button>
+    </div>
+    <div id="modal-demo"></div>
+  </div>
+
+  <script src="/components/js/components.js"></script>
+  <script>
+    includeComponent('#header-demo', '/components/header.html');
+    includeComponent('#footer-demo', '/components/footer.html');
+    fetch('/components/product-card.html').then(res => res.text()).then(html => {
+      document.getElementById('product-card-demo').innerHTML = html + html;
+    });
+    fetch('/components/cart-item.html').then(res => res.text()).then(html => {
+      document.getElementById('cart-item-demo').innerHTML = html + html;
+    });
+    includeComponent('#modal-demo', '/components/modal.html');
+  </script>
+  <!-- Bootstrap JS (opcional, para componentes JS do Bootstrap) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cart Item View</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../components/css/components-style.css">
+  <style>body { background: #f3f4f6; }</style>
+</head>
+<body class="p-4">
+  <h1 class="mb-4">Cart Item Component</h1>
+  <div id="cart-item-demo"></div>
+  <script src="/components/js/components.js"></script>
+  <script>
+    fetch('/components/cart-item.html').then(res => res.text()).then(html => {
+      document.getElementById('cart-item-demo').innerHTML = html;
+    });
+  </script>
+</body>
+</html> 

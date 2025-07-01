@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Produtos - E-Commerce</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/components/css/components.css">
+</head>
+<body>
+  <div id="header"></div>
+  <main class="container">
+    <h1>Produtos</h1>
+    <div id="product-list"></div>
+  </main>
+  <div id="footer"></div>
+  <div id="modal"></div>
+  <script src="/components/js/components.js"></script>
+  <script>
+    includeComponent('#header', '/components/header.html');
+    includeComponent('#footer', '/components/footer.html');
+    includeComponent('#modal', '/components/modal.html');
+    fetch('/components/product-card.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('product-list').innerHTML = html + html + html + html;
+      });
+  </script>
+  <script src="/js/products.js"></script>
+</body>
+</html> 

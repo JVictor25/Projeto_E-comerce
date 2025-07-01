@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Modal View</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../components/css/components-style.css">
+  <style>body { background: #f3f4f6; }</style>
+</head>
+<body class="p-4">
+  <h1 class="mb-4">Modal Component</h1>
+  <button onclick="showModal('Exemplo de conteúdo do modal!')" class="btn btn-primary mb-3">Abrir Modal</button>
+  <div id="modal-demo"></div>
+  <script src="/components/js/components.js"></script>
+  <script>
+    includeComponent('#modal-demo', '/components/modal.html');
+  </script>
+</body>
+</html> 
