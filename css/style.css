@@ -1,42 +1,98 @@
+/* Estilos gerais */
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
-  background: #fafafa;
-  color: #222;
+  font-family: Arial, sans-serif;
 }
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
-h1 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-}
-button {
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-}
-form input[type="text"],
-form input[type="email"],
-form input[type="password"] {
+
+.site-header {
   width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.2rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  min-height: 80px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  background-color: #313131;
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  gap: 24px;
   box-sizing: border-box;
-} 
-#header {
-    background-color: #333;
-    color: #fff;
-    padding: 1rem 0;
 }
-.header .container {
-    display: flex;
-    justify-content: space-between;
+.logo-link {
+  display: flex;
+  align-items: center;
+  height: 60px;
+
 }
+.logo-img {
+  height: 48px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+.main-nav {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+
+}
+.main-nav a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  height: 60px;
+}
+.search-bar {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin: 0 16px;
+
+}
+.search-bar input {
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 4px 0 0 4px;
+  border: none;
+}
+.search-bar button {
+  height: 32px;
+  border-radius: 0 4px 4px 0;
+  border: none;
+  background: #0800ff;
+  color: #fff;
+  cursor: pointer;
+  padding: 0 12px;
+}
+.user-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  height: 60px;
+
+}
+.user-actions a {
+  color: #fff;
+  text-decoration: none;
+}
+.cart-button {
+  padding: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #0800ff;
+  border-radius: 80%;
+}
+.cart-button-img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  display: block;
+}
+
+
+
