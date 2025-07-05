@@ -4,19 +4,29 @@
   <meta charset="UTF-8">
   <title>Login - E-Commerce</title>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/header-footer.css">
+  <link rel="stylesheet" href="/css/login.css">
   <link rel="stylesheet" href="/components/css/components.css">
 </head>
 <body>
   <div id="header"></div>
-  <main class="container">
-    <h1>Login</h1>
-    <form id="login-form">
-      <label>Email:<br><input type="email" required></label><br><br>
-      <label>Senha:<br><input type="password" required></label><br><br>
-      <button type="submit">Entrar</button>
+  <div class="login-section">
+    <h2>Login</h2>
+    <form class="loginForm">
+      <div class="form-group">
+          <br>
+          <label for="login-email">E-mail:</label>
+          <input type="email" id="login-email" name="email" placeholder="Seu e-mail" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Senha:</label>
+          <input type="password" id="login-password" name="password" placeholder="Sua senha" required>
+        </div>
+      <button class="benviar" type="submit">Enviar</button>
+      <hr><br>
+      <p>Não tem uma conta? <a id="Registre-se" href="register.html">Registre-se</a></p>
     </form>
-    <p>Não tem conta? <a href="#">Cadastre-se</a></p>
-  </main>
+  </div>
   <div id="footer"></div>
   <div id="modal"></div>
   <script src="/components/js/components.js"></script>

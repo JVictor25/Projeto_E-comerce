@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro - E-Commerce</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/header-footer.css">
+  <link rel="stylesheet" href="/css/register.css">
+  <link rel="stylesheet" href="/components/css/components.css">
+</head>
+<body>
+  <div id="header"></div>
+  <div class="register-section">
+    <h2>Registro</h2>
+    <form class="registerForm">
+      <div class="form-group">
+        <label for="register-name">Nome:</label>
+        <input type="text" id="register-name" name="name" placeholder="Seu nome" required>
+      </div>
+      <div class="form-group">
+        <label for="register-surname">Sobrenome:</label>
+        <input type="text" id="register-surname" name="surname" placeholder="Seu sobrenome">
+      </div>
+      <div class="form-group">
+        <label for="register-email">E-mail:</label>
+        <input type="email" id="register-email" name="email" placeholder="Seu e-mail" required>
+      </div>
+      <div class="form-group">
+        <label for="register-password">Senha:</label>
+        <input type="password" id="register-password" name="password" placeholder="Sua senha" required>
+      </div>
+      <div class="form-group">
+        <label for="register-confirm-password">Confirmar Senha:</label>
+        <input type="password" id="register-confirm-password" name="confirm-password" placeholder="Confirme sua senha" required>
+      </div>
+      <div class="form-group">
+        <label for="register-phone">Telefone:</label>
+        <input type="tel" id="register-phone" name="phone" placeholder="Seu telefone" required>
+      </div>
+      <button class="benviar" type="submit">Registrar</button>
+      <hr><br>
+      <p>Já tem uma conta? <a id="Login" href="login.html">Faça login</a></p>
+    </form>
+  </div>
+  <div id="footer"></div>
+  <div id="modal"></div>
+  <script src="/components/js/components.js"></script>
+  <script>
+    includeComponent('#header', '/components/header.html');
+    includeComponent('#footer', '/components/footer.html');
+    includeComponent('#modal', '/components/modal.html');
+    document.getElementById('registerForm').onsubmit = function(e) {
+      e.preventDefault();
+      showModal('Registro realizado com sucesso!');
+    };
+  </script>
+  <script src="/js/auth.js"></script>
+</body>
+</html> 
