@@ -6,27 +6,48 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/header-footer.css">
   <link rel="stylesheet" href="/components/css/components.css">
+  <link rel="stylesheet" href="/css/cart.css">
 </head>
 <body>
   <div id="header"></div>
   <main class="container">
     <h1>Seu Carrinho</h1>
-    <div id="cart-items"></div>
-    <button onclick="showModal('Compra finalizada!')">Finalizar Compra</button>
+    <div id="cart-items" class="cart-items-list"></div>
+    <div class="cart-actions">
+      <div class="cart-coupon">
+        <input type="text" id="cart-coupon-input" placeholder="Cupom de desconto">
+        <button id="apply-coupon-btn">Aplicar</button>
+      </div>
+      <button id="checkout-btn" style="display:none;" onclick="showModal('Compra finalizada!')">Finalizar Compra</button>
+    </div>
   </main>
   <div id="footer"></div>
   <div id="modal"></div>
   <script src="/components/js/components.js"></script>
+  <script src="/js/cart.js"></script>
   <script>
     includeComponent('#header', '/components/header.html');
     includeComponent('#footer', '/components/footer.html');
     includeComponent('#modal', '/components/modal.html');
-    fetch('/components/cart-item.html')
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById('cart-items').innerHTML = html + html;
-      });
+    document.addEventListener('DOMContentLoaded', function() {
+      renderCartItems();
+      updateCheckoutButton();
+    });
+    // Atualiza botão ao remover item
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('remove-cart-item-btn')) {
+        setTimeout(updateCheckoutButton, 100);
+      }
+    });
+    // Lógica do cupom (apenas exibição, sem desconto real)
+    document.getElementById('apply-coupon-btn').onclick = function() {
+      const input = document.getElementById('cart-coupon-input');
+      if (input.value.trim()) {
+        showModal('Cupom "' + input.value + '" aplicado! (simulação)');
+      } else {
+        showModal('Digite um cupom válido.');
+      }
+    };
   </script>
-  <script src="/js/cart.js"></script>
 </body>
 </html> 

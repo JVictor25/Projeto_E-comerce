@@ -20,11 +20,6 @@
     includeComponent('#header', '/components/header.html');
     includeComponent('#footer', '/components/footer.html');
     includeComponent('#modal', '/components/modal.html');
-    fetch('/components/product-card.html')
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById('product-list').innerHTML = html + html + html + html;
-      });
   </script>
   <script src="/js/products.js"></script>
 </body>

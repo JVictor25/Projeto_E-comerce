@@ -6,12 +6,20 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/header-footer.css">
   <link rel="stylesheet" href="/components/css/components.css">
+  <link rel="stylesheet" href="/css/product.css">
 </head>
 <body>
   <div id="header"></div>
   <main class="container">
     <h1>Detalhes do Produto</h1>
-    <div id="product-detail"></div>
+    <div id="product-detail">
+      <img id="product-image" src="/imgs/cart.png" alt="Imagem do Produto" style="max-width: 300px; display: block; margin-bottom: 16px;">
+      <h2 id="product-name">Nome do Produto</h2>
+      <p id="product-description">Descrição do produto...</p>
+      <p><strong>Preço:</strong> R$ <span id="product-price">0,00</span></p>
+      <p><strong>Categorias:</strong> <span id="product-categories">Categoria(s)</span></p>
+      <button id="add-to-cart-btn">Adicionar ao Carrinho</button>
+    </div>
   </main>
   <div id="footer"></div>
   <div id="modal"></div>
@@ -20,12 +28,9 @@
     includeComponent('#header', '/components/header.html');
     includeComponent('#footer', '/components/footer.html');
     includeComponent('#modal', '/components/modal.html');
-    fetch('/components/product-card.html')
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById('product-detail').innerHTML = html;
-      });
   </script>
+  <script src="/js/cart.js"></script>
+  <script src="/js/product-detail.js"></script>
   <script src="/js/main.js"></script>
 </body>
 </html> 
