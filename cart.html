@@ -44,9 +44,15 @@
       const input = document.getElementById('cart-coupon-input');
       if (input.value.trim()) {
         showModal('Cupom "' + input.value + '" aplicado! (simulação)');
+        input.value = '';
       } else {
         showModal('Digite um cupom válido.');
       }
+    };
+    // Ao finalizar compra, limpa o carrinho e recarrega a página
+    document.getElementById('checkout-btn').onclick = function() {
+      localStorage.removeItem('cart');
+      location.reload();
     };
   </script>
 </body>

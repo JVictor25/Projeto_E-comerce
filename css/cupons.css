@@ -1,0 +1,251 @@
+body {
+  background: #f7f7f7;
+}
+.cupons-container {
+  max-width: 1100px;
+  margin: 40px auto 32px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  padding: 32px 24px 24px 24px;
+}
+.cupons-container h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+.cupons-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+}
+.cupom-card {
+  background: #fafbfc;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 22px 18px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+  position: relative;
+  border-left: 5px solid #ff6600;
+}
+.cupom-info {
+  margin-bottom: 18px;
+}
+.cupom-nome {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.cupom-desconto {
+  font-size: 1.3rem;
+  color: #1a8917;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.cupom-condicao, .cupom-limite, .cupom-validade {
+  font-size: 0.98rem;
+  color: #444;
+  margin-bottom: 2px;
+}
+.cupom-detalhes-btn {
+  align-self: flex-end;
+  background: #ff6600;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 22px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.cupom-detalhes-btn:hover {
+  background: #e65c00;
+}
+.detalhe-cupom-container {
+  max-width: 700px;
+  margin: 40px auto 32px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  padding: 32px 24px 24px 24px;
+}
+.cupom-codigo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  position: absolute;
+  top: 18px;
+  right: 18px;
+}
+.cupom-codigo {
+  background: #fff3e0;
+  color: #ff6600;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 18px 6px 18px 6px;
+  padding: 8px 18px;
+  box-shadow: 0 1px 6px rgba(255,102,0,0.08);
+  letter-spacing: 1px;
+  border: 2px dashed #ff6600;
+  user-select: all;
+}
+#btn-copiar-cupom {
+  background: #ff6600;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+}
+#btn-copiar-cupom:hover {
+  background: #e65c00;
+}
+.cupom-detalhe-card {
+  background: #fafbfc;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 22px 18px 18px 18px;
+  margin-bottom: 28px;
+  border-left: 5px solid #ff6600;
+  position: relative;
+}
+.cupom-detalhe-card .cupom-nome {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.cupom-detalhe-card .cupom-desconto {
+  font-size: 1.4rem;
+  color: #1a8917;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.cupom-detalhe-card .cupom-descricao {
+  font-size: 1rem;
+  color: #333;
+  margin-top: 10px;
+}
+.produtos-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 12px;
+}
+.produto-card-cupom {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 16px 10px 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 140px;
+  max-width: 160px;
+  flex: 0 0 30%;
+  position: relative;
+}
+.produto-card-cupom img {
+  width: 100%;
+  max-width: 90px;
+  height: 90px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background: #f7f7f7;
+}
+.produto-nome {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-align: center;
+}
+.produto-preco {
+  font-size: 0.98rem;
+  color: #1a8917;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-align: center;
+}
+.carousel-container-cupom {
+  max-width: 700px;
+  margin: 0 auto 24px auto;
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  padding: 24px 8px 18px 8px;
+  overflow: hidden;
+}
+.carousel-viewport-cupom {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  min-height: 220px;
+}
+.carousel-list-cupom {
+  display: flex;
+  gap: 24px;
+  will-change: transform;
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+.carousel-list-cupom.dragging {
+  cursor: grabbing;
+  user-select: none;
+  transition: none !important;
+}
+.carousel-btn.left, .carousel-btn.right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #ff6600;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.carousel-btn.left { left: 4px; }
+.carousel-btn.right { right: 4px; }
+.carousel-btn:hover { background: #e65c00; }
+@media (max-width: 700px) {
+  .cupons-container, .detalhe-cupom-container {
+    max-width: 98vw;
+    padding: 16px 4vw;
+  }
+  .cupons-list {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .produtos-list {
+    gap: 10px;
+  }
+  .produto-card-cupom {
+    min-width: 90vw;
+    max-width: 95vw;
+    flex: 1 1 100%;
+  }
+  .carousel-container-cupom {
+    max-width: 98vw;
+    padding: 10px 2vw;
+  }
+  .carousel-list-cupom {
+    gap: 10px;
+  }
+} 

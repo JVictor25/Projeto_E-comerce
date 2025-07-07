@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Contato - E-Commerce</title>
+  <link rel="stylesheet" href="/css/contato.css">
+  <link rel="stylesheet" href="/css/header-footer.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div id="header"></div>
+  <main class="contato-container">
+    <section class="contato-form-section">
+      <h2>Fale Conosco</h2>
+      <h4>Possui alguma dúvida? Uma sugestão? Fale conosco! Mande uma mensagem</h4>
+      <hr>
+      <form class="contato-form">
+        <div class="form-group">
+          <label for="name">Nome:</label>
+          <input type="text" id="name" name="name" placeholder="Seu nome" required>
+        </div>
+        <div class="form-group">
+          <label for="email">E-mail:</label>
+          <input type="email" id="email" name="email" placeholder="Seu e-mail" required>
+        </div>
+        <div class="form-group">
+          <label for="i-tel">Telefone:</label>
+          <input type="tel" name="phone" pattern="[0-9]{2} [0-9]{5}-[0-9]{4}" id="i-tel" placeholder="00 00000-0000">
+        </div>
+        <div class="form-group radio-group">
+          <label>Este número é WhatsApp?</label>
+          <label><input type="radio" name="whatsapp" value="sim"> Sim</label>
+          <label><input type="radio" name="whatsapp" value="nao"> Não</label>
+        </div>
+        <div class="form-group">
+          <label for="mensagem">Deixe aqui sua mensagem:</label>
+          <textarea id="mensagem" name="mensagem" rows="4" required></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="benviar" type="submit">Enviar</button>
+          <button class="blimpar" type="reset">Limpar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <div id="footer"></div>
+  <script src="/components/js/components.js"></script>
+  <script>
+    includeComponent('#header', '/components/header.html');
+    includeComponent('#footer', '/components/footer.html');
+  </script>
+</body>
+</html> 

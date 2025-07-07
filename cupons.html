@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cupons - E-Commerce</title>
+  <link rel="stylesheet" href="/css/cupons.css">
+  <link rel="stylesheet" href="/css/header-footer.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div id="header"></div>
+  <main class="cupons-container">
+    <h1>Cupons</h1>
+    <div class="cupons-list" id="cupons-list"></div>
+  </main>
+  <div id="footer"></div>
+  <script src="/components/js/components.js"></script>
+  <script>
+    includeComponent('#header', '/components/header.html');
+    includeComponent('#footer', '/components/footer.html');
+
+    // Mock de produtos
+    const produtos = [
+      { id: 1, nome: 'Smartphone X', preco: 1999.99, imagem: '/imgs/cart.png' },
+      { id: 2, nome: 'Notebook Pro', preco: 3999.99, imagem: '/imgs/cart.png' },
+      { id: 3, nome: 'Fone Bluetooth', preco: 299.99, imagem: '/imgs/cart.png' },
+      { id: 4, nome: 'Cafeteira', preco: 249.99, imagem: '/imgs/cart.png' },
+      { id: 5, nome: 'Tênis Esportivo', preco: 349.99, imagem: '/imgs/cart.png' },
+      { id: 6, nome: 'Smartwatch', preco: 899.99, imagem: '/imgs/cart.png' },
+    ];
+    // Mock de cupons
+    const cupons = [
+      {
+        id: 1,
+        nome: '10% OFF Outlet Imperdível',
+        tipo: 'percentual',
+        valor: 10,
+        condicao: 'Em produtos selecionados. Compra mínima R$ 30',
+        limite: 'R$ 50',
+        validade: '2025-07-30',
+        produtos: [1, 2, 3],
+        descricao: 'Desconto de 10% em produtos selecionados, até R$ 50.'
+      },
+      {
+        id: 2,
+        nome: 'R$ 20 OFF',
+        tipo: 'fixo',
+        valor: 20,
+        condicao: 'Em produtos de Notebook Pro. Compra mínima R$ 600',
+        limite: 'R$ 20',
+        validade: '2025-07-30',
+        produtos: [2],
+        descricao: 'Desconto fixo de R$ 20 em Notebook Pro.'
+      },
+      {
+        id: 3,
+        nome: '2% OFF Eletrônicos',
+        tipo: 'percentual',
+        valor: 2,
+        condicao: 'Em produtos eletrônicos. Sem compra mínima.',
+        limite: 'R$ 50.000',
+        validade: '2025-07-15',
+        produtos: [1,2,3,6],
+        descricao: 'Desconto de 2% em eletrônicos.'
+      },
+      {
+        id: 4,
+        nome: 'R$ 5 OFF',
+        tipo: 'fixo',
+        valor: 5,
+        condicao: 'Em produtos de Fone Bluetooth. Compra mínima R$ 8',
+        limite: 'R$ 5',
+        validade: '2025-07-30',
+        produtos: [3],
+        descricao: 'Desconto fixo de R$ 5 em Fone Bluetooth.'
+      },
+      {
+        id: 5,
+        nome: 'R$ 15 OFF',
+        tipo: 'fixo',
+        valor: 15,
+        condicao: 'Em produtos de Tênis Esportivo. Compra mínima R$ 300',
+        limite: 'R$ 15',
+        validade: '2025-07-20',
+        produtos: [5],
+        descricao: 'Desconto fixo de R$ 15 em Tênis Esportivo.'
+      },
+      {
+        id: 6,
+        nome: '2% OFF Smartwatch',
+        tipo: 'percentual',
+        valor: 2,
+        condicao: 'Em Smartwatch. Compra mínima R$ 10',
+        limite: 'R$ 10',
+        validade: '2025-07-11',
+        produtos: [6],
+        descricao: 'Desconto de 2% em Smartwatch.'
+      },
+      {
+        id: 7,
+        nome: '5% OFF em Todos os Produtos',
+        tipo: 'percentual',
+        valor: 5,
+        condicao: 'Válido para todos os produtos da loja',
+        limite: 'R$ 100',
+        validade: '2025-08-31',
+        produtos: [1,2,3,4,5,6,7,8,9,10],
+        descricao: 'Desconto de 5% em qualquer produto da loja.'
+      }
+    ];
+    // Renderizar cupons
+    function renderCupons() {
+      const list = document.getElementById('cupons-list');
+      list.innerHTML = '';
+      cupons.forEach(cupom => {
+        const card = document.createElement('div');
+        card.className = 'cupom-card';
+        card.innerHTML = `
+          <div class="cupom-info">
+            <div class="cupom-nome">${cupom.nome}</div>
+            <div class="cupom-desconto">${cupom.tipo === 'percentual' ? cupom.valor + '% OFF' : 'R$ ' + cupom.valor + ' OFF'}</div>
+            <div class="cupom-condicao">${cupom.condicao}</div>
+            <div class="cupom-limite">Limite de ${cupom.limite}</div>
+            <div class="cupom-validade">Válido até ${new Date(cupom.validade).toLocaleDateString('pt-BR')}</div>
+          </div>
+          <button class="cupom-detalhes-btn" data-id="${cupom.id}">Detalhes</button>
+        `;
+        card.querySelector('.cupom-detalhes-btn').onclick = function() {
+          window.location.href = `detalhe-cupom.html?id=${cupom.id}`;
+        };
+        list.appendChild(card);
+      });
+    }
+    renderCupons();
+    // Salvar mocks no localStorage para uso na página de detalhes
+    localStorage.setItem('cupons', JSON.stringify(cupons));
+    localStorage.setItem('produtos', JSON.stringify(produtos));
+  </script>
+</body>
+</html> 

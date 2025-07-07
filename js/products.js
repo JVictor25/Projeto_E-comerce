@@ -3,15 +3,18 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Gera produtos apenas se não houver no localStorage
   function getOrCreateProdutos() {
-    let produtos = localStorage.getItem('produtos');
-    if (produtos) return JSON.parse(produtos);
-    // Gera produtos com preços aleatórios e salva no localStorage
-    produtos = [
-      { id: '1', nome: 'Produto 1', preco: (Math.random()*100+10).toFixed(2), imagem: '/imgs/cart.png' },
-      { id: '2', nome: 'Produto 2', preco: (Math.random()*100+10).toFixed(2), imagem: '/imgs/cart.png' },
-      { id: '3', nome: 'Produto 3', preco: (Math.random()*100+10).toFixed(2), imagem: '/imgs/cart.png' },
-      { id: '4', nome: 'Produto 4', preco: (Math.random()*100+10).toFixed(2), imagem: '/imgs/cart.png' },
-      { id: '5', nome: 'Produto 5', preco: (Math.random()*100+10).toFixed(2), imagem: '/imgs/cart.png' }
+    // Sempre sobrescreve os produtos no localStorage
+    const produtos = [
+      { id: 1, nome: 'Smartphone X', preco: 1999.99, imagem: '/imgs/cart.png' },
+      { id: 2, nome: 'Notebook Pro', preco: 3999.99, imagem: '/imgs/cart.png' },
+      { id: 3, nome: 'Fone Bluetooth', preco: 299.99, imagem: '/imgs/cart.png' },
+      { id: 4, nome: 'Cafeteira', preco: 249.99, imagem: '/imgs/cart.png' },
+      { id: 5, nome: 'Tênis Esportivo', preco: 349.99, imagem: '/imgs/cart.png' },
+      { id: 6, nome: 'Smartwatch', preco: 899.99, imagem: '/imgs/cart.png' },
+      { id: 7, nome: 'Livro de Ficção', preco: 59.90, imagem: '/imgs/cart.png' },
+      { id: 8, nome: 'Cadeira Gamer', preco: 1299.00, imagem: '/imgs/cart.png' },
+      { id: 9, nome: 'Mochila Executiva', preco: 199.00, imagem: '/imgs/cart.png' },
+      { id: 10, nome: 'Câmera Digital', preco: 2499.00, imagem: '/imgs/cart.png' }
     ];
     localStorage.setItem('produtos', JSON.stringify(produtos));
     return produtos;

@@ -25,7 +25,7 @@ function addToCart(product) {
 // Função para remover um produto do carrinho
 function removeFromCart(productId) {
   let cart = getCart();
-  cart = cart.filter(item => item.id !== productId);
+  cart = cart.filter(item => String(item.id) !== String(productId));
   saveCart(cart);
   renderCartItems();
 }
@@ -83,7 +83,7 @@ function renderCartItems() {
 // Função para alterar a quantidade de um item do carrinho
 function changeCartItemQuantity(productId, delta) {
   const cart = getCart();
-  const item = cart.find(i => i.id === productId);
+  const item = cart.find(i => String(i.id) === String(productId));
   if (!item) return;
   item.quantity += delta;
   if (item.quantity < 1) item.quantity = 1;
@@ -91,7 +91,32 @@ function changeCartItemQuantity(productId, delta) {
   renderCartItems();
 }
 
+// Função para mostrar ou esconder o botão de finalizar compra
+function updateCheckoutButton() {
+  const cart = getCart();
+  const btn = document.getElementById('checkout-btn');
+  if (!btn) return;
+  if (cart.length > 0) {
+    btn.style.display = 'block';
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
 // Renderiza os itens do carrinho ao carregar a página do carrinho
 if (window.location.pathname.includes('cart.html')) {
-  document.addEventListener('DOMContentLoaded', renderCartItems);
+  document.addEventListener('DOMContentLoaded', function() {
+    renderCartItems();
+    updateCheckoutButton();
+  });
+  // Atualiza botão ao remover item ou alterar quantidade
+  document.addEventListener('click', function(e) {
+    if (
+      e.target.classList.contains('remove-cart-item-btn') ||
+      e.target.classList.contains('increase-qty-btn') ||
+      e.target.classList.contains('decrease-qty-btn')
+    ) {
+      setTimeout(updateCheckoutButton, 100);
+    }
+  });
 } 
