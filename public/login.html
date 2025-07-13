@@ -10,35 +10,42 @@
 </head>
 <body>
   <div id="header"></div>
+
   <div class="login-section">
     <h2>Login</h2>
-    <form class="loginForm">
+    <!-- IMPORTANTE: id correto para o form -->
+    <form id="login-form" class="loginForm">
       <div class="form-group">
-          <br>
-          <label for="login-email">E-mail:</label>
-          <input type="email" id="login-email" name="email" placeholder="Seu e-mail" required>
-        </div>
-        <div class="form-group">
-          <label for="login-password">Senha:</label>
+        <label for="login-email">E-mail:</label>
+        <input type="email" id="login-email" name="email" placeholder="Seu e-mail" required>
+      </div>
+      <div class="form-group">
+        <label for="login-password">Senha:</label>
+        <div class="password-container">
           <input type="password" id="login-password" name="password" placeholder="Sua senha" required>
+          <button type="button" class="toggle-password" onclick="togglePassword()" title="Mostrar/Ocultar senha">
+            👁
+          </button>
         </div>
+      </div>
       <button class="benviar" type="submit">Enviar</button>
       <hr><br>
-      <p>Não tem uma conta? <a id="Registre-se" href="register.html">Registre-se</a></p>
+      <p>Não tem uma conta? <a href="register.html">Registre-se</a></p>
     </form>
   </div>
+
   <div id="footer"></div>
   <div id="modal"></div>
+
+  <script src="/js/auth-manager.js"></script>
   <script src="/components/js/components.js"></script>
   <script>
     includeComponent('#header', '/components/header.html');
     includeComponent('#footer', '/components/footer.html');
     includeComponent('#modal', '/components/modal.html');
-    document.getElementById('login-form').onsubmit = function(e) {
-      e.preventDefault();
-      showModal('Login realizado com sucesso!');
-    };
   </script>
-  <script src="/js/auth.js"></script>
+
+  <!-- carregue por último -->
+  <script src="/js/login.js"></script>
 </body>
-</html> 
+</html>

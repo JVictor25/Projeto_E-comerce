@@ -1,0 +1,48 @@
+<header class="site-header">
+  <a href="/index.html">E-COMERCE</a>
+  </a>
+  
+  <nav class="main-nav">
+      <a href="/index.html">INÍCIO</a>
+      <a href="/products.html">PRODUTOS</a>
+      <a href="/cupons.html">CUPONS</a>
+      <a href="/contato.html">CONTATO</a>
+      <!-- Links administrativos (visíveis apenas para admins) -->
+      <div id="admin-nav" class="admin-nav" style="display: none;">
+          <a href="/admin/dashboard.html">📊 Dashboard</a>
+          <a href="/admin/produtos.html">📦 Produtos</a>
+          <a href="/admin/cupons.html">🎫 Cupons</a>
+      </div>
+  </nav>
+  <form class="search-bar" action="/products.html" method="get">
+      <input type="text" name="q" placeholder="Buscar produtos..." aria-label="Buscar produtos">
+      <button type="submit">🔍</button>
+  </form>
+  <nav class="user-actions">
+      <!-- Links para usuários não logados -->
+      <div id="guest-actions">
+          <a href="/login.html" class="btn btn-outline">Login</a>
+          <a href="/register.html" class="btn btn-primary">Registrar-se</a>
+      </div>
+      
+      <!-- Links para usuários logados -->
+      <div id="user-actions" style="display: none;">
+          <span id="user-name" class="user-name"></span>
+          <a href="/orders.html">Meus Pedidos</a>
+          <a href="/cart.html" class="cart-button">
+              <img class="cart-button-img" src="/imgs/cartWhite.png" alt="Carrinho de Compras">
+          </a>
+          <button onclick="logout()" class="btn btn-outline">Sair</button>
+      </div>
+      
+      <!-- Links para administradores -->
+      <div id="admin-actions" style="display: none;">
+          <span id="admin-name" class="admin-name"></span>
+          <a href="/admin/dashboard.html" class="btn btn-primary">📊 Admin</a>
+          <button onclick="adminLogout()" class="btn btn-outline">Sair</button>
+      </div>
+      
+      <!-- Link discreto para admin (visível apenas quando não logado como admin) -->
+      <a href="/admin/login.html" id="admin-link" class="admin-link" title="Painel Administrativo">⚙️</a>
+  </nav>
+</header>

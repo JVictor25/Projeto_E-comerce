@@ -12,7 +12,7 @@
   <div id="header"></div>
   <div class="register-section">
     <h2>Registro</h2>
-    <form class="registerForm">
+    <form id="registerForm" class="registerForm">
       <div class="form-group">
         <label for="register-name">Nome:</label>
         <input type="text" id="register-name" name="name" placeholder="Seu nome" required>
@@ -27,15 +27,25 @@
       </div>
       <div class="form-group">
         <label for="register-password">Senha:</label>
-        <input type="password" id="register-password" name="password" placeholder="Sua senha" required>
+        <div class="password-container">
+          <input type="password" id="register-password" name="password" placeholder="Sua senha" required>
+          <button type="button" class="toggle-password" onclick="togglePassword('register-password')" title="Mostrar/Ocultar senha">
+            👁
+          </button>
+        </div>
       </div>
       <div class="form-group">
         <label for="register-confirm-password">Confirmar Senha:</label>
-        <input type="password" id="register-confirm-password" name="confirm-password" placeholder="Confirme sua senha" required>
+        <div class="password-container">
+          <input type="password" id="register-confirm-password" name="confirm-password" placeholder="Confirme sua senha" required>
+          <button type="button" class="toggle-password" onclick="togglePassword('register-confirm-password')" title="Mostrar/Ocultar senha">
+            👁
+          </button>
+        </div>
       </div>
       <div class="form-group">
         <label for="register-phone">Telefone:</label>
-        <input type="tel" id="register-phone" name="phone" placeholder="Seu telefone" required>
+        <input type="tel" id="register-phone" name="phone" placeholder="Seu telefone (opcional)">
       </div>
       <button class="benviar" type="submit">Registrar</button>
       <hr><br>
@@ -44,8 +54,25 @@
   </div>
   <div id="footer"></div>
   <div id="modal"></div>
+  <script src="/js/auth-manager.js"></script>
   <script src="/components/js/components.js"></script>
   <script>
+    // Função para alternar visibilidade da senha
+    function togglePassword(inputId) {
+      const passwordInput = document.getElementById(inputId);
+      const toggleBtn = passwordInput.parentElement.querySelector('.toggle-password');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleBtn.textContent = '👁‍🗨️';
+        toggleBtn.title = 'Ocultar senha';
+      } else {
+        passwordInput.type = 'password';
+        toggleBtn.textContent = '👁';
+        toggleBtn.title = 'Mostrar senha';
+      }
+    }
+
     includeComponent('#header', '/components/header.html');
     includeComponent('#footer', '/components/footer.html');
     includeComponent('#modal', '/components/modal.html');

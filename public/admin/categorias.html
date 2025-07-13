@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Categorias - Painel Admin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.5rem; }
+        .categorias-list { margin-top: 2rem; }
+        .categorias-list table { width: 100%; border-collapse: collapse; }
+        .categorias-list th, .categorias-list td { border: 1px solid #ddd; padding: 0.5rem; text-align: left; }
+        .categorias-list th { background: #f5f5f5; }
+        .btn { padding: 0.5rem 1rem; border: none; border-radius: 5px; background: #667eea; color: white; cursor: pointer; }
+        .btn:hover { background: #4b5fc1; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📂 Gerenciar Categorias</h1>
+        <div class="nav-buttons">
+            <a href="dashboard.html" class="btn">Dashboard</a>
+            <a href="produtos.html" class="btn">Produtos</a>
+            <a href="cupons.html" class="btn">Cupons</a>
+            <a href="galpoes.html" class="btn">Galpões</a>
+            <a href="precos.html" class="btn">Histórico de Preços</a>
+            <button class="btn" onclick="logout()">Sair</button>
+        </div>
+    </div>
+    <div class="container">
+        <h2>Cadastrar Nova Categoria</h2>
+        <form id="categoriaForm">
+            <div class="form-group">
+                <label for="nome">Nome da Categoria:</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="descricao">Descrição:</label>
+                <textarea id="descricao" name="descricao"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="super_categoria">Super Categoria (opcional):</label>
+                <select id="super_categoria" name="super_categoria">
+                    <option value="">Nenhuma</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Cadastrar Categoria</button>
+        </form>
+        <div class="categorias-list">
+            <h2>Categorias Existentes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Super Categoria</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="categoriasTableBody">
+                    <tr><td colspan="5">Carregando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function logout() {
+            localStorage.removeItem('adminToken');
+            window.location.href = 'login.html';
+        }
+        let categorias = [];
+        async function loadCategorias() {
+            const token = localStorage.getItem('adminToken');
+            const res = await fetch('/admin/categorias', { headers: { 'Authorization': `Bearer ${token}` } });
+            if (res.ok) {
+                categorias = await res.json();
+                renderCategorias();
+                renderSuperCategoriaOptions();
+            }
+        }
+        let editandoCategoriaId = null;
+
+        function renderCategorias() {
+            const tbody = document.getElementById('categoriasTableBody');
+            if (!categorias.length) {
+                tbody.innerHTML = '<tr><td colspan="5">Nenhuma categoria cadastrada.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = categorias.map(cat => {
+                const superCat = categorias.find(c => c.id === cat.super_categoria);
+                return `<tr>
+                    <td>${cat.id}</td>
+                    <td>${cat.nome}</td>
+                    <td>${cat.descricao || ''}</td>
+                    <td>${superCat ? superCat.nome : ''}</td>
+                    <td>
+                        <button class='btn' onclick='editarCategoria(${cat.id})'>Editar</button>
+                        <button class='btn' style='background:#dc3545;margin-left:5px;' onclick='excluirCategoria(${cat.id})'>Excluir</button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        async function editarCategoria(id) {
+            const cat = categorias.find(c => c.id === id);
+            if (!cat) return;
+            editandoCategoriaId = id;
+            document.getElementById('nome').value = cat.nome;
+            document.getElementById('descricao').value = cat.descricao || '';
+            document.getElementById('super_categoria').value = cat.super_categoria || '';
+            document.getElementById('categoriaForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function excluirCategoria(id) {
+            if (!confirm('Tem certeza que deseja excluir esta categoria?')) return;
+            const token = localStorage.getItem('adminToken');
+            const res = await fetch(`/admin/categorias/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                await loadCategorias();
+                alert('Categoria excluída com sucesso!');
+            } else {
+                const err = await res.json();
+                alert(err.message || 'Erro ao excluir categoria');
+            }
+        }
+
+        function renderSuperCategoriaOptions() {
+            const select = document.getElementById('super_categoria');
+            select.innerHTML = '<option value="">Nenhuma</option>';
+            categorias.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.textContent = cat.nome;
+                select.appendChild(opt);
+            });
+        }
+        document.getElementById('categoriaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nome = document.getElementById('nome').value;
+            const descricao = document.getElementById('descricao').value;
+            const super_categoria = document.getElementById('super_categoria').value || null;
+            const token = localStorage.getItem('adminToken');
+            const body = { nome, descricao, super_categoria };
+            let res;
+            if (editandoCategoriaId) {
+                res = await fetch(`/admin/categorias/${editandoCategoriaId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(body)
+                });
+            } else {
+                res = await fetch('/admin/categorias', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(body)
+                });
+            }
+            if (res.ok) {
+                document.getElementById('categoriaForm').reset();
+                editandoCategoriaId = null;
+                await loadCategorias();
+                alert(editandoCategoriaId ? 'Categoria atualizada com sucesso!' : 'Categoria cadastrada com sucesso!');
+            } else {
+                const err = await res.json();
+                alert(err.message || 'Erro ao salvar categoria');
+            }
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCategorias();
+        });
+    </script>
+</body>
+</html> 

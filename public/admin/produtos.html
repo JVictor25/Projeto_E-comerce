@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Produtos - Painel Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .produtos-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .produto-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .produto-info h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .produto-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .produto-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+
+        .edit-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #218838;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .price-btn {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .price-btn:hover {
+            background: #e0a800;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-ativo {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inativo {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-futura {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .search-bar {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .produto-card {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📦 Gerenciar Produtos</h1>
+        <div class="nav-buttons">
+            <a href="dashboard.html" class="btn">Dashboard</a>
+            <a href="produtos.html" class="btn active">Produtos</a>
+            <a href="cupons.html" class="btn">Cupons</a>
+            <a href="galpoes.html" class="btn">Galpões</a>
+            <a href="precos.html" class="btn">Histórico de Preços</a>
+            <button class="btn" onclick="logout()">Sair</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Lista de Produtos</h2>
+            <button class="add-btn" onclick="openModal()">➕ Adicionar Produto</button>
+        </div>
+
+        <!-- Filtro por status -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar produtos por nome..." onkeyup="filterProdutos()">
+            <select id="filter-status" onchange="filterProdutos()" style="margin-left:10px;">
+                <option value="">Todos</option>
+                <option value="ativo">Ativo</option>
+                <option value="inativo">Inativo</option>
+                <option value="sem_estoque">Sem Estoque</option>
+                <option value="rascunho">Rascunho</option>
+            </select>
+        </div>
+
+        <div id="produtosList" class="produtos-grid">
+            <!-- Produtos serão carregados aqui -->
+        </div>
+    </div>
+
+    <!-- Modal para adicionar/editar produto -->
+    <div id="produtoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Adicionar Produto</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+
+            <form id="produtoForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nome">Nome do Produto:</label>
+                        <input type="text" id="nome" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="preco_inicial">Preço Inicial (R$):</label>
+                        <input type="number" id="preco_inicial" name="preco_inicial" step="0.01" required readonly style="background:#f5f5f5;cursor:not-allowed;">
+                        <small style="color:#888;">Para editar o preço, utilize o botão <span style='font-size:1.1em;'>💰 Preço</span> na lista de produtos.</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="descricao">Descrição:</label>
+                    <textarea id="descricao" name="descricao" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="categorias">Categorias:</label>
+                    <select id="categorias" name="categorias" multiple required style="min-height: 40px;"></select>
+                </div>
+                <div class="form-group">
+                    <label for="imagem_url">URL da Imagem:</label>
+                    <input type="url" id="imagem_url" name="imagem_url" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label>Estoque Inicial por Galpão:</label>
+                    <div id="estoqueGalpoes"></div>
+                    <div style="margin-top:10px;">
+                        <select id="selectGalpao"></select>
+                        <input type="number" id="quantidadeGalpao" min="1" placeholder="Quantidade">
+                        <button type="button" onclick="addGalpaoEstoque()">Adicionar</button>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="save-btn">Salvar Produto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para alterar preço -->
+    <div id="precoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Alterar Preço</h3>
+                <span class="close" onclick="closePrecoModal()">&times;</span>
+            </div>
+
+            <form id="precoForm">
+                <div class="form-group">
+                    <label for="novoPreco">Novo Preço (R$):</label>
+                    <input type="number" id="novoPreco" name="preco" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataInicio">Data de Início:</label>
+                    <input type="date" id="dataInicio" name="data_inicio" required>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" onclick="closePrecoModal()">Cancelar</button>
+                    <button type="submit" class="save-btn">Atualizar Preço</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="promocaoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aplicar Promoção</h3>
+                <span class="close" onclick="closePromocaoModal()">&times;</span>
+            </div>
+            <form id="promocaoForm">
+                <div class="form-group">
+                    <label for="tipoPromocao">Tipo de Desconto:</label>
+                    <select id="tipoPromocao" name="tipo_de_desconto" required>
+                        <option value="porcentagem">Porcentagem (%)</option>
+                        <option value="fixo">Valor Fixo (R$)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="valorPromocao">Valor do Desconto:</label>
+                    <input type="number" id="valorPromocao" name="quantidade_de_desconto" step="0.01" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dataInicioPromocao">Data de Início:</label>
+                        <input type="date" id="dataInicioPromocao" name="data_inicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dataFimPromocao">Data de Fim:</label>
+                        <input type="date" id="dataFimPromocao" name="data_fim">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" onclick="closePromocaoModal()">Cancelar</button>
+                    <button type="submit" class="save-btn">Aplicar Promoção</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Histórico de Preços -->
+    <div id="historicoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📊 Histórico de Preços</h3>
+                <span class="close" onclick="closeHistoricoModal()">&times;</span>
+            </div>
+            <div id="historicoContent">
+                <div class="produto-info" id="produtoInfo"></div>
+                <div class="historico-list" id="historicoList"></div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="cancel-btn" onclick="closeHistoricoModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+        let editingProdutoId = null;
+        let editingPrecoProdutoId = null;
+        let allProdutos = [];
+
+        let galpoesDisponiveis = [];
+        let galpoesEstoque = [];
+
+        let categoriasDisponiveis = [];
+        let categoriasChoices = null;
+
+        // Verificar autenticação
+        function checkAuth() {
+            const token = localStorage.getItem('adminToken');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('adminToken');
+            window.location.href = 'login.html';
+        }
+
+        // Carregar produtos
+        async function loadProdutos() {
+            const token = localStorage.getItem('adminToken');
+            
+            try {
+                const response = await fetch('/admin/produtos', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    allProdutos = await response.json();
+                    displayProdutos(allProdutos);
+                } else {
+                    console.error('Erro ao carregar produtos');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+
+        // Exibir produtos
+        function displayProdutos(produtos) {
+            const container = document.getElementById('produtosList');
+            container.innerHTML = '';
+
+            produtos.forEach(produto => {
+                const card = document.createElement('div');
+                card.className = 'produto-card';
+                card.innerHTML = `
+                    <div class="produto-info">
+                        <h3>${produto.nome} <span class="status-badge status-${produto.status || 'ativo'}">${produto.status || 'ativo'}</span></h3>
+                        <div class="produto-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Preço:</span>
+                                <span class="detail-value">R$ ${produto.preco ? Number(produto.preco).toFixed(2) : '0,00'}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Estoque:</span>
+                                <span class="detail-value">${produto.estoque || 0} unidades</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">ID:</span>
+                                <span class="detail-value">#${produto.id}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Descrição:</span>
+                                <span class="detail-value">${produto.descricao ? produto.descricao.substring(0, 50) + '...' : 'Sem descrição'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="produto-actions">
+                        <button class="action-btn edit-btn" onclick="editProduto(${produto.id})">Editar</button>
+                        <button class="action-btn price-btn" onclick="openPrecoModal(${produto.id})">💰 Preço</button>
+                        <button class="action-btn" style="background:#17a2b8;color:white;" onclick="openPromocaoModal(${produto.id})">🔥 Promoção</button>
+                        <button class="action-btn" style="background:#6f42c1;color:white;" onclick="viewPrecoHistory(${produto.id})">📊 Histórico</button>
+                        <button class="action-btn delete-btn" onclick="deleteProduto(${produto.id})">Excluir</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Filtrar produtos
+        function filterProdutos() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('filter-status').value;
+            const filteredProdutos = allProdutos.filter(produto => 
+                (produto.nome.toLowerCase().includes(searchTerm) ||
+                produto.descricao.toLowerCase().includes(searchTerm)) &&
+                (statusFilter === '' || produto.status === statusFilter)
+            );
+            displayProdutos(filteredProdutos);
+        }
+
+        // Modal functions
+        function openModal(produto = null) {
+            document.getElementById('produtoModal').style.display = 'block';
+            if (produto) {
+                editingProdutoId = produto.id;
+                document.getElementById('modalTitle').textContent = 'Editar Produto';
+                loadCategoriasForForm().then(() => fillForm(produto));
+            } else {
+                editingProdutoId = null;
+                document.getElementById('modalTitle').textContent = 'Adicionar Produto';
+                document.getElementById('produtoForm').reset();
+                galpoesEstoque = []; // Resetar estoque ao abrir modal de adicionar
+                renderGalpoesEstoque(); // Renderizar estoque vazio
+                loadCategoriasForForm();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('produtoModal').style.display = 'none';
+            editingProdutoId = null;
+        }
+
+        // Remover funções e CSS de checkboxes, busca e alinhamento customizado
+        // Restaurar loadCategoriasForForm para popular o <select multiple>
+        async function loadCategoriasForForm() {
+            const token = localStorage.getItem('adminToken');
+            const res = await fetch('/admin/categorias', { headers: { 'Authorization': `Bearer ${token}` } });
+            if (res.ok) {
+                categoriasDisponiveis = await res.json();
+                const select = document.getElementById('categorias');
+                select.innerHTML = '';
+                categoriasDisponiveis.forEach(cat => {
+                    const opt = document.createElement('option');
+                    opt.value = cat.id;
+                    opt.textContent = cat.nome;
+                    select.appendChild(opt);
+                });
+                // Inicializar Choices.js
+                if (categoriasChoices) categoriasChoices.destroy();
+                categoriasChoices = new Choices(select, {
+                    removeItemButton: true,
+                    searchResultLimit: 10,
+                    placeholder: true,
+                    placeholderValue: 'Selecione as categorias',
+                    noResultsText: 'Nenhuma categoria encontrada',
+                    itemSelectText: 'Selecionar',
+                    shouldSort: false
+                });
+            }
+        }
+
+        // Restaurar fillForm para marcar <select multiple>
+        function fillForm(produto) {
+            document.getElementById('nome').value = produto.nome;
+            document.getElementById('preco_inicial').value = produto.preco || 0;
+            document.getElementById('descricao').value = produto.descricao || '';
+            if (produto.categorias && Array.isArray(produto.categorias)) {
+                if (categoriasChoices) {
+                    categoriasChoices.removeActiveItems();
+                    produto.categorias.forEach(cid => {
+                        categoriasChoices.setChoiceByValue(String(cid));
+                    });
+                } else {
+                    const select = document.getElementById('categorias');
+                    Array.from(select.options).forEach(opt => {
+                        opt.selected = produto.categorias.includes(Number(opt.value));
+                    });
+                }
+            }
+            if (produto.imagem_url) {
+                document.getElementById('imagem_url').value = produto.imagem_url;
+            }
+            galpoesEstoque = produto.galpoes_estoque || [];
+            renderGalpoesEstoque();
+        }
+
+        // Modal de preço
+        function openPrecoModal(produtoId) {
+            editingPrecoProdutoId = produtoId;
+            document.getElementById('precoModal').style.display = 'block';
+            document.getElementById('dataInicio').value = new Date().toISOString().split('T')[0];
+        }
+
+        function closePrecoModal() {
+            document.getElementById('precoModal').style.display = 'none';
+            editingPrecoProdutoId = null;
+        }
+
+        let editingPromocaoProdutoId = null;
+        function openPromocaoModal(produtoId) {
+            editingPromocaoProdutoId = produtoId;
+            document.getElementById('promocaoModal').style.display = 'block';
+            document.getElementById('promocaoForm').reset();
+            document.getElementById('dataInicioPromocao').value = new Date().toISOString().split('T')[0];
+        }
+        function closePromocaoModal() {
+            document.getElementById('promocaoModal').style.display = 'none';
+            editingPromocaoProdutoId = null;
+        }
+
+        // Modal de histórico de preços
+        async function viewPrecoHistory(produtoId) {
+            const token = localStorage.getItem('adminToken');
+            
+            try {
+                const response = await fetch(`/admin/produtos/${produtoId}/precos`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayHistoricoPrecos(data);
+                    document.getElementById('historicoModal').style.display = 'block';
+                } else {
+                    alert('Erro ao carregar histórico de preços');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao carregar histórico de preços');
+            }
+        }
+
+        function displayHistoricoPrecos(data) {
+            const produtoInfo = document.getElementById('produtoInfo');
+            const historicoList = document.getElementById('historicoList');
+
+            // Informações do produto
+            produtoInfo.innerHTML = `
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
+                    <h4>${data.produto.nome}</h4>
+                    <p><strong>Preço Atual:</strong> R$ ${Number(data.produto.preco_atual).toFixed(2)}</p>
+                    <p><strong>ID:</strong> #${data.produto.id}</p>
+                </div>
+            `;
+
+            // Histórico de preços
+            if (data.historico_precos.length === 0) {
+                historicoList.innerHTML = '<p style="text-align: center; color: #666;">Nenhum histórico de preços encontrado.</p>';
+                return;
+            }
+
+            historicoList.innerHTML = data.historico_precos.map(preco => {
+                const dataInicio = new Date(preco.data_inicio_vigencia).toLocaleDateString('pt-BR');
+                const dataFim = preco.data_fim ? new Date(preco.data_fim).toLocaleDateString('pt-BR') : 'Em vigor';
+                const precoTotal = Number(preco.preco_total).toFixed(2);
+                const precoComDesconto = Number(preco.preco_com_desconto).toFixed(2);
+                
+                let statusClass = '';
+                let statusText = '';
+                
+                switch(preco.status) {
+                    case 'ativa':
+                        statusClass = 'status-ativo';
+                        statusText = 'Ativa';
+                        break;
+                    case 'expirada':
+                        statusClass = 'status-inativo';
+                        statusText = 'Expirada';
+                        break;
+                    case 'futura':
+                        statusClass = 'status-futura';
+                        statusText = 'Futura';
+                        break;
+                }
+
+                let descontoInfo = '';
+                if (preco.tipo_de_desconto && preco.tipo_de_desconto !== 'normal') {
+                    const desconto = preco.tipo_de_desconto === 'porcentagem' 
+                        ? `${preco.quantidade_de_desconto}%` 
+                        : `R$ ${Number(preco.quantidade_de_desconto).toFixed(2)}`;
+                    descontoInfo = `<br><small>Desconto: ${desconto}</small>`;
+                }
+
+                return `
+                    <div style="border: 1px solid #ddd; padding: 1rem; margin-bottom: 0.5rem; border-radius: 5px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>R$ ${precoComDesconto}</strong>
+                                ${preco.tipo_de_desconto !== 'normal' ? `<small>(de R$ ${precoTotal})</small>` : ''}
+                                ${descontoInfo}
+                            </div>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                        <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
+                            <strong>Vigência:</strong> ${dataInicio} até ${dataFim}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function closeHistoricoModal() {
+            document.getElementById('historicoModal').style.display = 'none';
+        }
+
+        // Editar produto
+        async function editProduto(id) {
+            const produto = allProdutos.find(p => p.id === id);
+            if (produto) {
+                openModal(produto);
+            }
+        }
+
+        // Deletar produto
+        async function deleteProduto(id) {
+            if (!confirm('Tem certeza que deseja excluir este produto?')) {
+                return;
+            }
+
+            const token = localStorage.getItem('adminToken');
+            
+            try {
+                const response = await fetch(`/admin/produtos/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    loadProdutos();
+                } else {
+                    alert('Erro ao excluir produto');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao excluir produto');
+            }
+        }
+
+        async function loadGalpoesForForm() {
+            const token = localStorage.getItem('adminToken');
+            const res = await fetch('/admin/galpoes', { headers: { 'Authorization': `Bearer ${token}` } });
+            if (res.ok) {
+                galpoesDisponiveis = await res.json();
+                const select = document.getElementById('selectGalpao');
+                select.innerHTML = '<option value="">Selecione o galpão</option>';
+                galpoesDisponiveis.forEach(g => {
+                    const opt = document.createElement('option');
+                    opt.value = g.id;
+                    opt.textContent = `${g.nome} (ID: ${g.id})`;
+                    select.appendChild(opt);
+                });
+            }
+        }
+        function addGalpaoEstoque() {
+            const galpaoId = document.getElementById('selectGalpao').value;
+            const quantidade = parseInt(document.getElementById('quantidadeGalpao').value);
+            if (!galpaoId || !quantidade || quantidade <= 0) return;
+            if (galpoesEstoque.some(g => g.galpao_id == galpaoId)) return;
+            const galpao = galpoesDisponiveis.find(g => g.id == galpaoId);
+            galpoesEstoque.push({ galpao_id: Number(galpaoId), quantidade });
+            renderGalpoesEstoque();
+        }
+        function renderGalpoesEstoque() {
+            const div = document.getElementById('estoqueGalpoes');
+            div.innerHTML = galpoesEstoque.map(g => {
+                const galpao = galpoesDisponiveis.find(x => x.id == g.galpao_id);
+                return `<div>${galpao ? galpao.nome : 'Galpão'} (ID: ${g.galpao_id}) - <b>${g.quantidade} un</b> <button type='button' onclick='removeGalpaoEstoque(${g.galpao_id})'>Remover</button></div>`;
+            }).join('');
+        }
+        function removeGalpaoEstoque(id) {
+            galpoesEstoque = galpoesEstoque.filter(g => g.galpao_id != id);
+            renderGalpoesEstoque();
+        }
+
+        // Form submit produto
+        document.getElementById('produtoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nome = document.getElementById('nome').value;
+            const descricao = document.getElementById('descricao').value;
+            const preco = parseFloat(document.getElementById('preco_inicial').value);
+            const imagem_url = document.getElementById('imagem_url').value;
+            const categorias = Array.from(document.getElementById('categorias').selectedOptions).map(opt => Number(opt.value));
+            if (!galpoesEstoque.length) {
+                alert('Adicione pelo menos um galpão e quantidade inicial!');
+                return;
+            }
+            const token = localStorage.getItem('adminToken');
+            const body = { nome, descricao, preco, galpoes: galpoesEstoque, categorias, imagem_url };
+            if (editingProdutoId) {
+                body.estoque = galpoesEstoque.reduce((acc, g) => acc + g.quantidade, 0);
+                body.status = 'ativo';
+            }
+
+            try {
+                const response = await fetch(editingProdutoId ? `/admin/produtos/${editingProdutoId}` : '/admin/produtos', {
+                    method: editingProdutoId ? 'PUT' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(body)
+                });
+                if (response.ok) {
+                    closeModal();
+                    loadProdutos();
+                    galpoesEstoque = [];
+                    renderGalpoesEstoque();
+                } else {
+                    const error = await response.json();
+                    alert(error.message || 'Erro ao salvar produto');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao salvar produto');
+            }
+        });
+
+        // Modal de preço
+        document.getElementById('precoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const novoPreco = parseFloat(document.getElementById('novoPreco').value);
+            const dataInicio = document.getElementById('dataInicio').value;
+            const token = localStorage.getItem('adminToken');
+
+            try {
+                const response = await fetch(`/admin/produtos/${editingPrecoProdutoId}/preco`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        preco: novoPreco,
+                        data_inicio: dataInicio
+                    })
+                });
+
+                if (response.ok) {
+                    closePrecoModal();
+                    loadProdutos(); // Atualizar preço no grid
+                } else {
+                    const error = await response.json();
+                    alert(error.message || 'Erro ao atualizar preço');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao atualizar preço');
+            }
+        });
+
+        // Modal de promoção
+        document.getElementById('promocaoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const tipoPromocao = document.getElementById('tipoPromocao').value;
+            const valorPromocao = parseFloat(document.getElementById('valorPromocao').value);
+            const dataInicio = document.getElementById('dataInicioPromocao').value;
+            const dataFim = document.getElementById('dataFimPromocao').value;
+            const token = localStorage.getItem('adminToken');
+
+            try {
+                const response = await fetch(`/admin/produtos/${editingPromocaoProdutoId}/promocao`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        tipo_de_desconto: tipoPromocao,
+                        quantidade_de_desconto: valorPromocao,
+                        data_inicio: dataInicio,
+                        data_fim: dataFim
+                    })
+                });
+
+                if (response.ok) {
+                    closePromocaoModal();
+                    loadProdutos(); // Atualizar promoção no grid
+                } else {
+                    const error = await response.json();
+                    alert(error.message || 'Erro ao aplicar promoção');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao aplicar promoção');
+            }
+        });
+
+        // Inicializar
+        checkAuth();
+        loadProdutos();
+        loadGalpoesForForm();
+    </script>
+</body>
+</html>

@@ -45,6 +45,34 @@ textarea {
   box-sizing: border-box;
 }
 
+/* Container para input de senha com botão */
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  padding-right: 50px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #666;
+  padding: 5px;
+  border-radius: 3px;
+  transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+  color: #0800ff;
+}
+
 textarea {
   resize: vertical;
 }

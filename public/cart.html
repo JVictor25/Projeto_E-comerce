@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrinho - E-Commerce</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/header-footer.css">
+  <link rel="stylesheet" href="/components/css/components-style.css">
+  <link rel="stylesheet" href="/css/cart.css">
+</head>
+<body>
+  <div id="header"></div>
+  <main class="container cart-main">
+    <div class="cart-lista-produtos">
+      <h1>Seu Carrinho</h1>
+      <div id="cart-items" class="cart-items-list"></div>
+    </div>
+    <div class="cart-resumo">
+      <div class="cart-summary-card">
+        <div class="cart-coupon"></div> <!-- O JS já renderiza o campo e botão corretamente -->
+        <div id="cart-total"></div>
+        <button id="checkout-btn" style="display:none;">Finalizar Compra</button>
+      </div>
+    </div>
+  </main>
+  <div id="footer"></div>
+  <div id="modal"></div>
+  <script src="/js/auth-manager.js"></script>
+  <script src="/components/js/components.js"></script>
+  <script src="/js/cart.js"></script>
+  <script>
+    includeComponent('#header', '/components/header.html');
+    includeComponent('#footer', '/components/footer.html');
+    includeComponent('#modal', '/components/modal.html');
+    // O cart.js já gerencia o carregamento dos itens e cupons
+    // Ao finalizar compra, limpa o carrinho e recarrega a página
+    document.getElementById('checkout-btn').onclick = function() {
+      showModal('Compra finalizada!');
+      setTimeout(() => {
+        location.reload();
+      }, 2000);
+    };
+  </script>
+</body>
+</html> 

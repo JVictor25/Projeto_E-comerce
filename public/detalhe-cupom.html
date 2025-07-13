@@ -25,31 +25,47 @@
   <script>
     includeComponent('#header', '/components/header.html');
     includeComponent('#footer', '/components/footer.html');
+    
     // Pega o id do cupom da URL
     function getCupomId() {
       const params = new URLSearchParams(window.location.search);
       return parseInt(params.get('id'));
     }
+    
+    // Carregar dados do localStorage
     const cupons = JSON.parse(localStorage.getItem('cupons') || '[]');
     const produtos = JSON.parse(localStorage.getItem('produtos') || '[]');
+    
     const cupom = cupons.find(c => c.id === getCupomId());
     if (!cupom) {
       document.getElementById('cupom-detalhe').innerHTML = '<p>Cupom não encontrado.</p>';
     } else {
+      console.log('DEBUG CUPOM:', cupom);
+      // Formatar limite (apenas para cupons de porcentagem)
+      const limiteText = cupom.tipo === 'porcentagem' && cupom.limite 
+        ? `R$ ${parseFloat(cupom.limite).toFixed(2)}` 
+        : 'Sem limite';
+      
+      // Formatar condição
+      const condicaoText = cupom.aplicavel_a === 'selecionados' 
+        ? 'Em produtos selecionados' 
+        : 'Em todos os produtos';
+      
       document.getElementById('cupom-detalhe').innerHTML = `
         <div class="cupom-detalhe-card">
-          <div class="cupom-nome">${cupom.nome}</div>
-          <div class="cupom-desconto">${cupom.tipo === 'percentual' ? cupom.valor + '% OFF' : 'R$ ' + cupom.valor + ' OFF'}</div>
-          <div class="cupom-condicao">${cupom.condicao}</div>
-          <div class="cupom-limite">Limite de ${cupom.limite}</div>
-          <div class="cupom-validade">Válido até ${new Date(cupom.validade).toLocaleDateString('pt-BR')}</div>
-          <div class="cupom-descricao">${cupom.descricao}</div>
+          <div class="cupom-nome">${cupom.titulo || cupom.codigo}</div>
+          <div class="cupom-desconto">${cupom.tipo === 'porcentagem' ? cupom.valor + '% OFF' : 'R$ ' + parseFloat(cupom.valor).toFixed(2) + ' OFF'}</div>
+          <div class="cupom-condicao">${condicaoText}. Compra mínima R$ ${(Number(cupom.compra_minima) || 0).toFixed(2)}</div>
+          <div class="cupom-limite">Limite de ${limiteText}</div>
+          <div class="cupom-validade">Válido até ${new Date(cupom.data_fim).toLocaleDateString('pt-BR')}</div>
+          <div class="cupom-descricao">Desconto ${cupom.tipo === 'porcentagem' ? 'de ' + cupom.valor + '%' : 'de R$ ' + parseFloat(cupom.valor).toFixed(2)} ${condicaoText.toLowerCase()}.</div>
           <div class="cupom-codigo-area">
-            <span class="cupom-codigo" id="cupom-codigo">${cupom.cupom || ('CUPOM' + cupom.id)}</span>
+            <span class="cupom-codigo" id="cupom-codigo">${cupom.codigo}</span>
             <button id="btn-copiar-cupom">Copiar</button>
           </div>
         </div>
       `;
+      
       // Botão de copiar cupom
       document.getElementById('btn-copiar-cupom').onclick = function() {
         const codigo = document.getElementById('cupom-codigo').textContent;
@@ -57,21 +73,32 @@
         this.textContent = 'Copiado!';
         setTimeout(() => { this.textContent = 'Copiar'; }, 1200);
       };
+      
       // Produtos participantes - carrossel
-      const produtosCupom = produtos.filter(p => cupom.produtos.includes(p.id));
+      let produtosCupom = [];
+      
+      if (cupom.aplicavel_a === 'selecionados') {
+        // Para cupons de produtos selecionados, mostrar apenas os primeiros 3 produtos como exemplo
+        produtosCupom = produtos.slice(0, 3);
+      } else {
+        // Para cupons aplicáveis a todos os produtos, mostrar todos
+        produtosCupom = produtos;
+      }
+      
       // Carrossel: renderiza todos os produtos de uma vez e move via translateX
       const carouselList = document.getElementById('carousel-list-prod');
       let carouselIndex = 0;
       const produtosPorVez = 3;
+      
       function renderCarousel() {
         carouselList.innerHTML = '';
         produtosCupom.forEach(produto => {
           const card = document.createElement('div');
           card.className = 'produto-card-cupom';
           card.innerHTML = `
-            <img src="${produto.imagem}" alt="${produto.nome}">
+            <img src="${produto.imagem || '/imgs/cart.png'}" alt="${produto.nome}">
             <div class="produto-nome">${produto.nome}</div>
-            <div class="produto-preco">R$ ${produto.preco.toFixed(2)}</div>
+            <div class="produto-preco">R$ ${parseFloat(produto.preco).toFixed(2)}</div>
           `;
           card.style.cursor = 'pointer';
           card.onclick = function() {
@@ -95,6 +122,7 @@
         if (carouselIndex < 0) carouselIndex = 0;
         updateCarouselTransform();
       };
+      
       document.getElementById('carousel-right-prod').onclick = function() {
         carouselIndex += 1;
         if (carouselIndex > produtosCupom.length - produtosPorVez) carouselIndex = Math.max(produtosCupom.length - produtosPorVez, 0);
@@ -106,6 +134,7 @@
       let isDragging = false;
       let lastDiff = 0;
       let dragOffset = 0;
+      
       carouselList.addEventListener('mousedown', function(e) {
         isDragging = true;
         startX = e.clientX;
@@ -114,6 +143,7 @@
         carouselList.classList.add('dragging');
         carouselList.style.transition = 'none';
       });
+      
       document.addEventListener('mousemove', function(e) {
         if (!isDragging) return;
         const diff = e.clientX - startX;
@@ -121,6 +151,7 @@
         dragOffset = diff;
         updateCarouselTransform(diff);
       });
+      
       document.addEventListener('mouseup', function() {
         if (isDragging) {
           carouselList.classList.remove('dragging');
@@ -137,6 +168,7 @@
         }
         isDragging = false;
       });
+      
       // Touch
       carouselList.addEventListener('touchstart', function(e) {
         if (e.touches.length === 1) {
@@ -148,6 +180,7 @@
           carouselList.style.transition = 'none';
         }
       });
+      
       carouselList.addEventListener('touchmove', function(e) {
         if (!isDragging) return;
         const diff = e.touches[0].clientX - startX;
@@ -155,6 +188,7 @@
         dragOffset = diff;
         updateCarouselTransform(diff);
       });
+      
       carouselList.addEventListener('touchend', function() {
         carouselList.classList.remove('dragging');
         carouselList.style.transition = 'transform 0.35s cubic-bezier(0.4,0,0.2,1)';
@@ -169,6 +203,7 @@
         }, 400);
         isDragging = false;
       });
+      
       renderCarousel();
     }
   </script>
